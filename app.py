@@ -209,17 +209,19 @@ def preprocess_for_model(df, scaler, encoders):
 
 # --- LOAD MODELS & SCALER ---
 # Use joblib for both as they are picklable
-scaler=joblib.load('models\\scaler.pkl')
-rf_model=joblib.load('models\\rf_component.pkl')
-xgb_model=joblib.load('models\\xgb_components.pkl')
-encoders=joblib.load("models\\encoders.pkl")
+scaler = joblib.load(os.path.join('models', 'scaler.pkl'))
+rf_model = joblib.load(os.path.join('models', 'rf_component.pkl'))
+xgb_model = joblib.load(os.path.join('models', 'xgb_components.pkl'))
+encoders = joblib.load(os.path.join('models', 'encoders.pkl'))
 
 # Load the medical threshold (used for High/Low risk classification)
 try:
-    with open('models\threshold.txt','r') as f:
+    # Fix the path here as well
+    with open(os.path.join('models', 'threshold.txt'), 'r') as f:
         OPTIMAL_THRESHOLD = float(f.read().strip())
-except:
-       OPTIMAL_THRESHOLD = 0.5 # Default fallback
+except Exception as e:
+    print(f"Threshold load error: {e}")
+    OPTIMAL_THRESHOLD = 0.5
 
 @app.route('/predict', methods=['POST'])
 def predict():
