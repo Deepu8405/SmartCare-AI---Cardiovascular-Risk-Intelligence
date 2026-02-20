@@ -1,0 +1,137 @@
+<div
+    class="bg-white/80 backdrop-blur-2xl rounded-[3rem] p-8 md:p-12 shadow-2xl border border-white/50 animate-fade-in relative overflow-hidden">
+
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-200/30 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 flex flex-col items-center text-center">
+
+        <div class="relative mb-8 group">
+            <svg class="w-48 h-48 transform -rotate-90">
+                <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="12" fill="transparent"
+                    class="text-gray-100" />
+                <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="12" fill="transparent"
+                    stroke-dasharray="552.92" stroke-dashoffset="{{ 552.92 * (1 - risk_score) }}" stroke-linecap="round"
+                    class="transition-all duration-1000 ease-out 
+                    {% if risk_score > 0.7 %} text-red-500 {% elif risk_score > 0.4 %} text-amber-500 {% else %} text-emerald-500 {% endif %}" />
+            </svg>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-5xl font-black text-gray-900">{{ (risk_score * 100)|round(1) }}%</span>
+                <span class="text-xs uppercase tracking-widest text-gray-500 font-bold">Probability</span>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            {% if risk_score > 0.7 %}
+            <h2 class="text-4xl font-black text-red-600 mb-2">High Risk Detected</h2>
+            <p class="text-gray-600 max-w-md mx-auto">Our ensemble models detected significant indicators. Please
+                consult a cardiologist for a formal evaluation.</p>
+            {% else %}
+            <h2 class="text-4xl font-black text-emerald-600 mb-2">Low Risk</h2>
+            <p class="text-gray-600 max-w-md mx-auto">Your indicators are currently within a healthy range. Maintain
+                your lifestyle and monitor regularly.</p>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full pt-8 border-t border-gray-100">
+
+            <button onclick="document.getElementById('ai-agent').click()"
+                class="flex flex-col items-center justify-center p-6 bg-emerald-50 hover:bg-emerald-100 rounded-3xl transition-all group border border-emerald-100">
+                <span class="text-3xl mb-2 group-hover:scale-125 transition-transform">💬</span>
+                <span class="font-bold text-emerald-900">AI Consult</span>
+            </button>
+
+            <button onclick="window.print()"
+                class="flex flex-col items-center justify-center p-6 bg-blue-50 hover:bg-blue-100 rounded-3xl transition-all group border border-blue-100">
+                <span class="text-3xl mb-2 group-hover:scale-125 transition-transform">🖨️</span>
+                <span class="font-bold text-blue-900">Print Report</span>
+            </button>
+
+            <button onclick="saveToCloud()"
+                class="flex flex-col items-center justify-center p-6 bg-purple-50 hover:bg-purple-100 rounded-3xl transition-all group border border-purple-100">
+                <span class="text-3xl mb-2 group-hover:scale-125 transition-transform">💾</span>
+                <span class="font-bold text-purple-900">Save Result</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ensure result section is visible
+    document.getElementById('result-section').classList.remove('hidden');
+
+    // Smooth scroll to result
+    document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+
+    // Store patient context for the AI Assistant (Day 3 Prep)
+    // This trick hides the Jinja syntax from the IDE linter
+    const rawData = '{{ patient_data|tojson | safe }}';
+    window.currentPatientContext = {
+        risk: "{{ (risk_score * 100)|round(1) }}%",
+        data: JSON.parse(rawData)
+    };
+
+    function saveToCloud() {
+        // Check if user is logged in (using your existing base.html auth check)
+        const authNav = document.getElementById('auth-nav');
+        const isLoggedIn = authNav && authNav.dataset.auth === '1';
+
+        if (!isLoggedIn) {
+            window.location.href = '/login';
+            return;
+        }
+
+        // If logged in, send data to the new Flask route
+        fetch('/save-patient-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(window.currentPatientContext)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert("✅ Health record synced successfully!");
+                } else {
+                    alert("❌ Sync failed: " + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<style>
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Print optimizations */
+    @media print {
+
+        nav,
+        #ai-agent,
+        .sm\:grid-cols-3 {
+            display: none !important;
+        }
+
+        .bg-white\/80 {
+            background: white !important;
+            backdrop-filter: none !important;
+        }
+
+        .shadow-2xl {
+            shadow: none !important;
+        }
+    }
+</style>

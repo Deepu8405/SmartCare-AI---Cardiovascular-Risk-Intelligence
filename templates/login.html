@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartCare AI - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .glow-blue {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .glow-emerald {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .tab-active {
+      background: linear-gradient(to right, #2563eb, #10b981) !important;
+      color: white !important;
+    }
+
+    .tab-inactive {
+      background: rgba(255, 255, 255, 0.7) !important;
+      color: #6b7280 !important;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-gradient-to-br from-indigo-50 via-blue-50 to-emerald-50 min-h-screen flex items-center justify-center p-4">
+
+  <!-- DEAD CENTERED CONTAINER -->
+  <div class="w-full max-w-md">
+    <div class="glass rounded-3xl shadow-2xl p-1 border border-white/30">
+      <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+
+        <!-- HEADER -->
+        <div class="text-center space-y-3">
+          <div
+            class="w-16 h-16 bg-gradient-to-br from-red-400 to-pink-500 rounded-2xl mx-auto flex items-center justify-center glow-blue shadow-xl">
+            <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <h1 class="text-3xl font-black bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
+            SmartCare AI
+          </h1>
+          <p class="text-lg text-gray-600 font-medium">Heart Risk Prediction</p>
+        </div>
+
+        <!-- PERFECT TABS - FIXED COLORS -->
+        <div class="glass rounded-2xl p-1 shadow-lg">
+          <div class="bg-white rounded-2xl flex overflow-hidden">
+            <button data-tab="login"
+              class="flex-1 py-4 px-6 font-bold text-lg tab-active glow-blue transition-all duration-300">
+              Login
+            </button>
+            <button data-tab="signup"
+              class="flex-1 py-4 px-6 font-bold text-lg tab-inactive hover:bg-white/80 transition-all duration-300">
+              Sign Up
+            </button>
+          </div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="login-form" hx-post="/login" hx-target="#auth-response" class="space-y-4 login-form-active">
+          <input type="email" name="email" placeholder="📧 Email" required
+            class="w-full h-14 px-4 text-lg border-2 border-gray-200/50 rounded-2xl bg-white/80 backdrop-blur-sm focus:ring-3 ring-blue-400 focus:border-blue-500 shadow-lg transition-all">
+
+          <input type="password" name="password" placeholder="🔒 Password" required
+            class="w-full h-14 px-4 text-lg border-2 border-gray-200/50 rounded-2xl bg-white/80 backdrop-blur-sm focus:ring-3 ring-blue-400 focus:border-blue-500 shadow-lg transition-all">
+
+          <button type="submit"
+            class="w-full h-14 bg-gradient-to-r from-blue-600 to-emerald-600 text-white rounded-2xl font-bold text-xl shadow-xl glow-blue hover:from-blue-700 hover:to-emerald-700 transform hover:-translate-y-0.5 transition-all">
+            🚀 Enter Dashboard
+          </button>
+        </form>
+
+        <!-- SIGNUP FORM - PERFECTLY SCROLLABLE -->
+        <form id="signup-form" hx-post="/signup" hx-target="#auth-response" class="space-y-3 hidden signup-form-active">
+          <div class="grid grid-cols-2 gap-3">
+            <input type="text" name="first_name" placeholder="First *" required
+              class="w-full h-12 px-3 text-base border rounded-xl bg-white/80 backdrop-blur-sm focus:ring-2 ring-emerald-400">
+            <input type="text" name="last_name" placeholder="Last *" required
+              class="w-full h-12 px-3 text-base border rounded-xl bg-white/80 backdrop-blur-sm focus:ring-2 ring-emerald-400">
+          </div>
+          <input type="email" name="email" placeholder="📧 Email *" required
+            class="w-full h-12 px-3 text-base border rounded-xl bg-white/80 backdrop-blur-sm focus:ring-2 ring-emerald-400">
+          <input type="password" name="password" placeholder="🔐 Password *" required minlength="6"
+            class="w-full h-12 px-3 text-base border rounded-xl bg-white/80 backdrop-blur-sm focus:ring-2 ring-emerald-400">
+          <input type="password" name="confirm_password" placeholder="🔐 Confirm *" required
+            class="w-full h-12 px-3 text-base border rounded-xl bg-white/80 backdrop-blur-sm focus:ring-2 ring-emerald-400">
+          <button type="submit"
+            class="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-bold text-xl shadow-xl glow-emerald hover:from-emerald-700 hover:to-teal-700 transform hover:-translate-y-0.5 transition-all sticky bottom-2 z-10 bg-white/90 backdrop-blur-sm mt-4">
+            🎉 Create Account
+          </button>
+        </form>
+
+        <!-- RESPONSE -->
+        <div id="auth-response" class="min-h-[1px]"></div>
+
+        <!-- FOOTER -->
+        <div class="space-y-2 pt-4 border-t border-gray-200/50 pb-2">
+          <!-- FIXED GOOGLE BUTTON - ICON VISIBLE -->
+          <button onclick="alert('Google OAuth - Production')"
+            class="w-full h-12 flex items-center justify-center gap-3 bg-white border rounded-xl text-sm font-semibold text-gray-800 hover:shadow-md transition-all backdrop-blur-sm">
+
+            <!-- ✅ COMPLETE GOOGLE SVG - VISIBLE -->
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <!-- Blue -->
+              <path fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <!-- Green -->
+              <path fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <!-- Yellow -->
+              <path fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.83l2.66-2.74z" />
+              <!-- Red -->
+              <path fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.72c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+
+            <span>Continue with Google</span>
+          </button>
+
+          <div class="text-center text-xs p-2 bg-blue-50/50 rounded-xl">
+            💡 <code class="font-bold text-blue-700">admin</code> / <code class="font-bold text-blue-700">1234</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // BULLETPROOF TAB SWITCHING WITH COLORS
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        const tab = btn.dataset.tab;
+
+        // RESET ALL TABS
+        document.querySelectorAll('[data-tab]').forEach(b => {
+          b.classList.remove('tab-active', 'glow-blue');
+          b.classList.add('tab-inactive');
+        });
+
+        // ACTIVATE CLICKED TAB
+        btn.classList.remove('tab-inactive');
+        btn.classList.add('tab-active', 'glow-blue');
+
+        // HIDE ALL FORMS
+        document.querySelectorAll('#login-form, #signup-form').forEach(form => {
+          form.classList.add('hidden');
+        });
+
+        // SHOW SELECTED FORM
+        document.getElementById(tab + '-form').classList.remove('hidden');
+
+        // SCROLL TO BOTTOM FOR SIGNUP BUTTON
+        if (tab === 'signup') {
+          setTimeout(() => {
+            document.querySelector('#signup-form button')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }, 100);
+        }
+      };
+    });
+
+    // SUCCESS AUTO-REDIRECT
+    document.body.addEventListener('htmx:afterRequest', e => {
+      if (e.detail.target.id === 'auth-response' &&
+        (e.detail.xhr.response.includes('SUCCESS') || e.detail.xhr.response.includes('Welcome'))) {
+        setTimeout(() => window.location.href = '/', 1200);
+      }
+    });
+  </script>
+</body>
+
+</html>

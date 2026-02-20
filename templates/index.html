@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Header -->
+<div class="text-center mb-10">
+    <div
+        class="w-20 h-20 bg-gradient-to-r from-red-400 to-pink-500 rounded-3xl mx-auto mb-5 flex items-center justify-center shadow-2xl">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+    </div>
+
+    <h1
+        class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
+        AI Heart Risk Predictor
+    </h1>
+    <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+        Manual patient inputs or upload a report — get an instant heart attack risk estimate.
+    </p>
+</div>
+
+<!-- Main Grid -->
+<div class="grid md:grid-cols-3 gap-8">
+
+    <!-- LEFT (2/3) -->
+    <div class="md:col-span-2 space-y-6">
+
+        <!-- Tabs Wrapper -->
+        <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 overflow-hidden">
+
+            <!-- Tab Header -->
+            <div class="p-5 md:p-6 border-b border-white/40 bg-white/40">
+                <div class="flex flex-wrap gap-3">
+                    <button type="button" id="tab-manual-btn"
+                        class="px-5 py-3 rounded-2xl font-semibold transition-all duration-200 bg-gray-900 text-white shadow-lg">
+                        Manual Input
+                    </button>
+
+                    <button type="button" id="tab-upload-btn"
+                        class="px-5 py-3 rounded-2xl font-semibold transition-all duration-200 bg-white/70 text-gray-900 hover:bg-white shadow">
+                        Upload Report
+                    </button>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-600">
+                    Tip: If you have many fields, fill the core clinical ones first — advanced fields are optional.
+                </div>
+            </div>
+
+            <!-- MANUAL PANEL -->
+            <div id="tab-manual" class="p-5 md:p-6">
+                <form hx-post="/predict" hx-target="#result-section" hx-swap="innerHTML" class="space-y-8">
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">1. Demographics & General Health</h3>
+                            <span
+                                class="text-xs px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-semibold">Manual
+                                Mode</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Age</label>
+                                <input name="age" type="number" min="18" max="120" placeholder="e.g. 52" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 bg-white/80" />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Sex</label>
+                                <select name="Sex" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">General Health</label>
+                                <select name="GeneralHealth" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="Excellent">Excellent</option>
+                                    <option value="Very good">Very good</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Poor">Poor</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Race/Ethnicity</label>
+                                <select name="RaceEthnicityCategory" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="White only, Non-Hispanic">White only, Non-Hispanic</option>
+                                    <option value="Black only, Non-Hispanic">Black only, Non-Hispanic</option>
+                                    <option value="Hispanic">Hispanic</option>
+                                    <option value="Multiracial, Non-Hispanic">Multiracial, Non-Hispanic</option>
+                                    <option value="Other race only, Non-Hispanic">Other race only, Non-Hispanic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">2. Medical History
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had Angina?</label>
+                                <select name="HadAngina" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had Stroke?</label>
+                                <select name="HadStroke" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had Diabetes?</label>
+                                <select name="HadDiabetes" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had COPD?</label>
+                                <select name="HadCOPD" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had Arthritis?</label>
+                                <select name="HadArthritis" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Had Chest Scan?</label>
+                                <select name="ChestScan" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">3. Lifestyle &
+                            Preventive</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Smoker Status</label>
+                                <select name="SmokerStatus" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="Never smoked">Never smoked</option>
+                                    <option value="Former smoker">Former smoker</option>
+                                    <option value="Current smoker - now smokes every day">Every day</option>
+                                    <option value="Current smoker - now smokes some days">Some days</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Alcohol Drinker?</label>
+                                <select name="AlcoholDrinkers" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Sleep Hours (1-24)</label>
+                                <input name="SleepHours" type="number" step="0.5" min="1" max="24" value="7" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Physical Activity?</label>
+                                <select name="PhysicalActivities" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">4. Clinical
+                            Observations</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Physical Health Days (Last
+                                    30)</label>
+                                <input name="PhysicalHealthDays" type="number" min="0" max="30" value="0" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Mental Health Days (Last
+                                    30)</label>
+                                <input name="MentalHealthDays" type="number" min="0" max="30" value="0" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Difficulty
+                                    Walking?</label>
+                                <select name="DifficultyWalking" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Teeth Removed</label>
+                                <select name="RemovedTeeth" required
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="None of them">None of them</option>
+                                    <option value="1 to 5">1 to 5</option>
+                                    <option value="6 or more, but not all">6 or more</option>
+                                    <option value="All">All</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <details class="bg-white/60 rounded-3xl border border-white/50 p-6 shadow-sm">
+                        <summary class="cursor-pointer font-bold text-gray-900 flex items-center gap-2">
+                            <span>Advanced Fields & Vaccines</span>
+                            <span class="text-xs font-normal text-gray-500">(Optional - helps accuracy)</span>
+                        </summary>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Last Checkup</label>
+                                <select name="LastCheckupTime"
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="Within past year (anytime less than 12 months ago)">Past year
+                                    </option>
+                                    <option value="Within past 2 years (1 year but less than 2 years ago)">Within 2
+                                        years</option>
+                                    <option value="Within past 5 years (2 years but less than 5 years ago)">Within 5
+                                        years</option>
+                                    <option value="5 or more years ago">5+ years ago</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Flu Vax (Last
+                                    12mo)</label>
+                                <select name="FluVaxLast12"
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Pneumo Vax Ever</label>
+                                <select name="PneumoVaxEver"
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tetanus Shot (Last
+                                    10yr)</label>
+                                <select name="TetanusLast10Tdap"
+                                    class="w-full p-4 rounded-2xl border border-gray-200 bg-white/80">
+                                    <option value="Yes, received Tdap">Yes, Tdap</option>
+                                    <option value="Yes, received tetanus shot but not sure what type">Yes, Unsure Type
+                                    </option>
+                                    <option value="No, did not receive any tetanus shot in the past 10 years">No
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Submit -->
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <button type="submit"
+                            class="w-full md:w-auto px-7 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-xl transition-all duration-200">
+                            Calculate Heart Risk
+                        </button>
+
+                        <button type="reset"
+                            class="w-full md:w-auto px-7 py-4 rounded-2xl font-bold bg-white/80 hover:bg-white text-gray-900 border border-gray-200 shadow transition-all duration-200">
+                            Reset
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Result Target -->
+                <div id="result-section" class="mt-6"></div>
+
+            </div>
+
+            <!-- UPLOAD PANEL -->
+            <div id="tab-upload" class="p-5 md:p-6 hidden">
+
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">Upload Medical Report</h3>
+                    <span class="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold">
+                        PDF / JPG / PNG
+                    </span>
+                </div>
+
+                <form id="upload-form" hx-post="/upload-report" hx-target="#upload-result"
+                    hx-encoding="multipart/form-data"
+                    class="bg-white/60 rounded-3xl border-2 border-dashed border-gray-300 p-8 text-center transition-all">
+                    <div id="drop-zone" class="rounded-2xl p-6 cursor-pointer">
+                        <div class="text-5xl mb-3">📄</div>
+                        <p id="upload-title" class="font-semibold mb-1">
+                            Drag & drop a file here
+                        </p>
+                        <p id="upload-subtitle" class="text-sm text-gray-600 mb-4">
+                            or click to choose (PDF / JPG / PNG)
+                        </p>
+
+                        <input type="file" name="file" id="report-file" accept=".pdf,.jpg,.jpeg,.png" class="hidden" />
+
+                        <div id="file-name" class="text-sm text-gray-700 mt-2"></div>
+                    </div>
+
+                    <button id="upload-btn" type="submit"
+                        class="mt-6 px-7 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-xl transition-all">
+                        Upload
+                    </button>
+                </form>
+
+                <div id="upload-result" class="mt-6"></div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+
+
+    <aside class="space-y-6">
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                Gemini API Key
+            </label>
+            <input id="gemini-api-key" type="password" placeholder="Paste your Gemini API key"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <p class="text-xs text-gray-500 mt-1">
+                Required to use the assistant
+            </p>
+        </div>
+        <div class="bg-white/70 backdrop-blur-xl rounded-xl shadow-lg p-4">
+            <h3 class="font-bold mb-2">Heart Health Tips</h3>
+            <ul class="list-disc pl-5 text-sm space-y-2 text-gray-700">
+                <li>Exercise at least 30 minutes most days</li>
+                <li>Reduce saturated fats and added sugars</li>
+                <li>Quit smoking and avoid secondhand smoke</li>
+                <li>Manage stress and sleep consistently</li>
+            </ul>
+        </div>
+
+        <div class="bg-white/70 backdrop-blur-xl rounded-xl shadow-lg p-4">
+            <h3 class="font-bold mb-2">Latest Articles</h3>
+
+            {% if articles and articles|length > 0 %}
+            <ul class="space-y-3">
+                {% for a in articles %}
+                <li class="text-sm">
+                    <div class="text-xs text-gray-500 mb-1">{{ a.source }}{% if a.published %} • {{ a.published }}{%
+                        endif %}</div>
+                    <a href="{{ url_for('article_view', article_id=a.id) }}"
+                        class="text-blue-700 hover:underline font-semibold">
+                        {{ a.title }}
+                    </a>
+
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-sm text-gray-600">No articles right now. Refresh in a minute.</p>
+            {% endif %}
+        </div>
+
+    </aside>
+
+</div>
+
+<!-- Minimal tab logic (because your app.js does NOT manage these tabs) -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const manualBtn = document.getElementById("tab-manual-btn");
+        const uploadBtn = document.getElementById("tab-upload-btn");
+        const manualTab = document.getElementById("tab-manual");
+        const uploadTab = document.getElementById("tab-upload");
+
+        function setActive(which) {
+            const isManual = which === "manual";
+
+            manualTab.classList.toggle("hidden", !isManual);
+            uploadTab.classList.toggle("hidden", isManual);
+
+            manualBtn.classList.toggle("bg-gray-900", isManual);
+            manualBtn.classList.toggle("text-white", isManual);
+            manualBtn.classList.toggle("bg-white/70", !isManual);
+            manualBtn.classList.toggle("text-gray-900", !isManual);
+
+            uploadBtn.classList.toggle("bg-gray-900", !isManual);
+            uploadBtn.classList.toggle("text-white", !isManual);
+            uploadBtn.classList.toggle("bg-white/70", isManual);
+            uploadBtn.classList.toggle("text-gray-900", isManual);
+        }
+
+        manualBtn.addEventListener("click", () => setActive("manual"));
+        uploadBtn.addEventListener("click", () => setActive("upload"));
+    });
+</script>
+
+{% endblock %}

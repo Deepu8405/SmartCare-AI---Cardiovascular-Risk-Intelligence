@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-6">
+    <div class="text-xs text-gray-500 mb-2">
+      {{ article.source }}{% if article.published %} • {{ article.published }}{% endif %}
+    </div>
+
+    <h1 class="text-2xl md:text-3xl font-black text-gray-900 mb-3">
+      {{ article.title }}
+    </h1>
+
+    {% if article.summary %}
+      <div class="text-gray-700 leading-relaxed prose max-w-none">
+        {{ article.summary | safe }}
+      </div>
+    {% endif %}
+
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href="{{ article.link }}" target="_blank"
+         class="bg-gradient-to-r from-blue-600 to-emerald-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg hover:from-blue-700 hover:to-emerald-700 transition-all">
+        Read on original site ↗
+      </a>
+
+      <a href="/" class="bg-white/80 text-gray-900 px-5 py-3 rounded-2xl font-bold border border-gray-200 shadow hover:bg-white transition-all">
+        ← Back
+      </a>
+    </div>
+  </div>
+
+  <!-- Optional: try embed (some sites block iframe; WHO/CDC often OK but not guaranteed) -->
+  <!-- <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 overflow-hidden">
+    <div class="p-4 text-sm text-gray-600 border-b border-white/40">
+      Embedded view (may be blocked by the source website)
+    </div>
+    <iframe src="{{ article.link }}" class="w-full" style="height: 75vh;"></iframe>
+  </div> -->
+
+</div>
+
+{% endblock %}
