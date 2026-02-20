@@ -20,7 +20,7 @@ SmartCare AI is a comprehensive heart health monitoring platform that leverages 
 2. Install dependencies: `pip install -r requirements.txt`
 3. Setup `.env` file with your credentials:
    - `SUPABASE_URL`, `SUPABASE_KEY`, `GOOGLE_AI_API_KEY`, `FLASK_SECRET_KEY`
-4. Run locally: `python app.py`
+4. Run locally: `flask run`
 
 ## ⚖️ Disclaimer
 This application is for educational and informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician.
