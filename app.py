@@ -223,6 +223,10 @@ except Exception as e:
     print(f"Threshold load error: {e}")
     OPTIMAL_THRESHOLD = 0.5
 
+@app.route('/how-to-use')
+def how_to_use():
+    return render_template('how-to-use.html')
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
